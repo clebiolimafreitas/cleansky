@@ -1,0 +1,46 @@
+.profile-container {
+  padding: 15px;
+}
+
+.profile-card {
+  padding: 15px;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.avatar {
+  width: 80px; /* Adjusted for mobile */
+  height: 80px; /* Adjusted for mobile */
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.counts-container {
+  display: flex;
+  flex-direction: column; /* Stack items vertically on mobile */
+  align-items: center; /* Center items */
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.follows-count, .followers-count {
+  margin: 5px 0; /* Space between counts */
+  font-size: 1rem; /* Adjusted for readability */
+}
+
+.handle {
+  font-size: 1.1rem; /* Adjusted for better visibility */
+}
+
+.description {
+  font-size: 0.9rem; /* Smaller text for description */
+  color: #555; /* Slightly muted color */
+  text-align: left;
+}
+
+/* Loading and error styles */
+.loading-container, .error {
+  text-align: center;
+}

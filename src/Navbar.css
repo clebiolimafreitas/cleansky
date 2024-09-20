@@ -1,0 +1,41 @@
+.navbar {
+  background-color: #0077cc;
+  padding: 10px;
+}
+
+.menu-toggle {
+  cursor: pointer;
+  color: white;
+  font-size: 24px;
+}
+
+.nav-links {
+  list-style-type: none;
+  padding: 0;
+  display: none; /* Esconde as opções por padrão */
+}
+
+.nav-links.open {
+  display: block; /* Mostra as opções quando aberto */
+}
+
+.nav-links li {
+  margin: 5px 0;
+}
+
+.nav-links a,
+.nav-links button {
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left; /* Alinha o texto à esquerda */
+}
+
+.nav-links a:hover,
+.nav-links button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
