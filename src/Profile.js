@@ -2,8 +2,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Profile.css";
+import { useUser } from './UserContext';
 
 const Profile = () => {
+  const { follows, setFollows, followers, setFollowers } = useUser();
   const [profile, setProfile] = useState(null);
   const [followsCount, setFollowsCount] = useState(0);
   const [followersCount, setFollowersCount] = useState(0);
@@ -23,6 +25,7 @@ const Profile = () => {
       if (response.data.cursor) {
         return fetchAllFollows(actor, response.data.cursor, updatedFollows);
       } else {
+        setFollows(updatedFollows);
         return updatedFollows;
       }
     } catch (error) {
@@ -44,6 +47,7 @@ const Profile = () => {
       if (response.data.cursor) {
         return fetchAllFollowers(actor, response.data.cursor, updatedFollowers);
       } else {
+        setFollowers(updatedFollowers);
         return updatedFollowers;
       }
     } catch (error) {
@@ -75,13 +79,21 @@ const Profile = () => {
           setError("Erro ao carregar o perfil.");
         }
 
-        // Fetching all follows
-        const allFollows = await fetchAllFollows(userHandle);
-        setFollowsCount(allFollows.length);
+        // Verifica se os follows já estão disponíveis no contexto
+        if (!follows.length) {
+          const allFollows = await fetchAllFollows(userHandle);
+          setFollowsCount(allFollows.length);
+        } else {
+          setFollowsCount(follows.length);
+        }
 
-        // Fetching all followers
-        const allFollowers = await fetchAllFollowers(userHandle);
-        setFollowersCount(allFollowers.length);
+        // Verifica se os followers já estão disponíveis no contexto
+        if (!followers.length) {
+          const allFollowers = await fetchAllFollowers(userHandle);
+          setFollowersCount(allFollowers.length);
+        } else {
+          setFollowersCount(followers.length);
+        }
 
       } catch (error) {
         console.error("Erro ao carregar dados do perfil:", error);
@@ -92,7 +104,7 @@ const Profile = () => {
     };
 
     fetchProfileAndCounts();
-  }, []);
+  }, [setFollows, setFollowers, follows, followers]);
 
   if (loading) {
     return (

@@ -1,103 +1,46 @@
-/* Container principal */
 .follows-container {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Título */
-.follows-container h2 {
-  font-size: 1.8rem;
-  margin-bottom: 20px;
-  color: #333;
-  text-align: center;
-}
-
-/* Contador de follows */
-.follows-count {
-  font-size: 1rem;
-  color: #0077cc;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-/* Lista de follows */
 .follows-list {
-  list-style: none;
+  list-style-type: none;
   padding: 0;
-  margin: 0;
 }
 
-/* Estilos para cada item da lista */
 .follow-item {
   display: flex;
   align-items: center;
-  padding: 10px;
   margin-bottom: 15px;
-  background-color: #fff;
+  padding: 10px;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.2s ease;
 }
 
-.follow-item:hover {
-  background-color: #f0f0f0;
-}
-
-/* Avatar do usuário */
 .follow-avatar {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  object-fit: cover;
   margin-right: 15px;
-  border: 2px solid #ddd;
 }
 
-/* Nome do seguidor */
 .follow-name {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #333;
-  margin: 0;
+  font-weight: bold;
 }
 
-/* Handle do seguidor (@) */
 .follow-handle {
-  font-size: 0.9rem;
-  color: #777;
-  margin: 0;
+  color: #555;
 }
 
-/* Estilos para o container de carregamento */
-.loading-container {
-  text-align: center;
-  padding: 50px 0;
+.star-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  margin-left: auto;
 }
 
-.spinner {
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-left-color: #09f;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Estilos para mensagens de erro */
-.error {
-  color: #d9534f;
-  background-color: #f9e2e2;
-  padding: 15px;
-  border-radius: 8px;
-  text-align: center;
+.star-button:hover {
+  transform: scale(1.1);
 }

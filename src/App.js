@@ -7,7 +7,7 @@ import MutualFriends from "./MutualFriends";
 import Navbar from "./Navbar";  
 import NonFollowers from "./NonFollowers";
 import FollowersNotFollowedBack from "./FollowersNotFollowedBack";
-import { useEffect } from "react";
+import { UserProvider } from './UserContext';
 
 function App() {
   const location = useLocation();
@@ -20,17 +20,19 @@ function App() {
 
   return (
     <>
-      {!location.pathname.includes('/login') && <Navbar onLogout={handleLogout} />}
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/mutualfriends" element={<MutualFriends />} />
-        <Route path="/follows" element={<Follows />} />
-        <Route path="/followers" element={<Followers />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/nonfollowers" element={<NonFollowers />} />
-        <Route path="/followersnotfollowedback" element={<FollowersNotFollowedBack />} />
-      </Routes>
+      <UserProvider>
+        {!location.pathname.includes('/login') && <Navbar onLogout={handleLogout} />}
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/mutualfriends" element={<MutualFriends />} />
+          <Route path="/follows" element={<Follows />} />
+          <Route path="/followers" element={<Followers />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/nonfollowers" element={<NonFollowers />} />
+          <Route path="/followersnotfollowedback" element={<FollowersNotFollowedBack />} />
+        </Routes>
+      </UserProvider>
     </>
   );
 }

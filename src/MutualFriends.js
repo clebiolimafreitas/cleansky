@@ -1,80 +1,22 @@
 // src/MutualFriends.js
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import "./MutualFriends.css";
+import { useUser } from './UserContext';
 
 const MutualFriends = () => {
-  const [follows, setFollows] = useState([]);
-  const [followers, setFollowers] = useState([]);
-  const [mutualFriends, setMutualFriends] = useState([]);
-  const [loading, setLoading] = useState(true); // Inicializa o loading como true
-  const [error, setError] = useState("");
-
-  const fetchAllFollows = async (actor, cursor = null, allFollows = []) => {
-    try {
-      const response = await axios.get(
-        `https://public.api.bsky.app/xrpc/app.bsky.graph.getFollows`,
-        {
-          params: {
-            actor,
-            cursor,
-          },
-        }
-      );
-      const newFollows = response.data.follows || [];
-      const updatedFollows = [...allFollows, ...newFollows];
-      if (response.data.cursor) {
-        return fetchAllFollows(actor, response.data.cursor, updatedFollows);
-      } else {
-        return updatedFollows;
-      }
-    } catch (error) {
-      console.error("Erro ao buscar follows:", error);
-      throw error;
-    }
-  };
-
-  const fetchAllFollowers = async (actor, cursor = null, allFollowers = []) => {
-    try {
-      const response = await axios.get(
-        `https://public.api.bsky.app/xrpc/app.bsky.graph.getFollowers`,
-        {
-          params: {
-            actor,
-            cursor,
-          },
-        }
-      );
-      const newFollowers = response.data.followers || [];
-      const updatedFollowers = [...allFollowers, ...newFollowers];
-      if (response.data.cursor) {
-        return fetchAllFollowers(actor, response.data.cursor, updatedFollowers);
-      } else {
-        return updatedFollowers;
-      }
-    } catch (error) {
-      console.error("Erro ao buscar followers:", error);
-      throw error;
-    }
-  };
+  const { follows } = useUser();  
+  const { followers } = useUser();  
+  const [mutualFriends, setMutualFriends] = useState([]);  
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState("");    
 
   useEffect(() => {
     const fetchFollowsAndFollowers = async () => {
       setLoading(true);
       setError("");
-
-      try {
-        const username = localStorage.getItem("username");
-        const userHandle = `${username}.bsky.social`;
-
-        const allFollows = await fetchAllFollows(userHandle);
-        const allFollowers = await fetchAllFollowers(userHandle);
-
-        setFollows(allFollows);
-        setFollowers(allFollowers);
-
-        const mutual = allFollows.filter(follow =>
-          allFollowers.some(follower => follower.did === follow.did)
+      try {        
+        const mutual = follows.filter(follow =>
+          followers.some(follower => follower.did === follow.did)
         );
         setMutualFriends(mutual);
       } catch (error) {

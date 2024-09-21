@@ -23,9 +23,9 @@ const Login = () => {
       });
 
       // Armazena o token e o username no localStorage
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userId', response.data.userId);
+      localStorage.setItem('token', response.data.accessJwt);
       localStorage.setItem('username', username); // Armazena o username
+      localStorage.setItem('password', password); // Armazena o password
 
       // Redireciona para a tela de perfil
       navigate('/profile');

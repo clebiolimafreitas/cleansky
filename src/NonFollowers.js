@@ -1,92 +1,69 @@
 // src/NonFollowers.js
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import "./NonFollowers.css";
+import { useUser } from './UserContext';
+import { BskyAgent } from '@atproto/api';
 
 const NonFollowers = () => {
-  const [follows, setFollows] = useState([]);
-  const [followers, setFollowers] = useState([]);
+  const { follows, setFollows } = useUser();  
+  const { followers } = useUser();  
   const [nonFollowers, setNonFollowers] = useState([]);
-  const [loading, setLoading] = useState(true); // Inicializa o loading como true
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
-  const fetchAllFollows = async (actor, cursor = null, allFollows = []) => {
-    try {
-      const response = await axios.get(
-        `https://public.api.bsky.app/xrpc/app.bsky.graph.getFollows`,
-        {
-          params: {
-            actor,
-            cursor,
-          },
-        }
-      );
-      const newFollows = response.data.follows || [];
-      const updatedFollows = [...allFollows, ...newFollows];
-      if (response.data.cursor) {
-        return fetchAllFollows(actor, response.data.cursor, updatedFollows);
-      } else {
-        return updatedFollows;
-      }
-    } catch (error) {
-      console.error("Erro ao buscar follows:", error);
-      throw error;
-    }
-  };
-
-  const fetchAllFollowers = async (actor, cursor = null, allFollowers = []) => {
-    try {
-      const response = await axios.get(
-        `https://public.api.bsky.app/xrpc/app.bsky.graph.getFollowers`,
-        {
-          params: {
-            actor,
-            cursor,
-          },
-        }
-      );
-      const newFollowers = response.data.followers || [];
-      const updatedFollowers = [...allFollowers, ...newFollowers];
-      if (response.data.cursor) {
-        return fetchAllFollowers(actor, response.data.cursor, updatedFollowers);
-      } else {
-        return updatedFollowers;
-      }
-    } catch (error) {
-      console.error("Erro ao buscar followers:", error);
-      throw error;
-    }
-  };
+  const [agent, setAgent] = useState(null); // Estado para armazenar a instância do agent
 
   useEffect(() => {
-    const fetchFollowsAndFollowers = async () => {
-      setLoading(true);
-      setError("");
+    const initAgent = async () => {
+      const newAgent = new BskyAgent({ service: 'https://bsky.social' });
+      await newAgent.login({
+        identifier: localStorage.getItem('username') + '.bsky.social',
+        password: localStorage.getItem('password'),
+      });
+      setAgent(newAgent);
+    };
 
-      try {
-        const username = localStorage.getItem("username");
-        const userHandle = `${username}.bsky.social`;
+    initAgent();
+  }, []);
 
-        const allFollows = await fetchAllFollows(userHandle);
-        const allFollowers = await fetchAllFollowers(userHandle);
-
-        setFollows(allFollows);
-        setFollowers(allFollowers);
-
-        const nonFollowBack = allFollows.filter(follow =>
-          !allFollowers.some(follower => follower.did === follow.did)
-        );
-        setNonFollowers(nonFollowBack);
-      } catch (error) {
-        console.error("Erro ao carregar perfis que não seguem de volta:", error);
-        setError("Erro ao carregar perfis que não seguem de volta.");
-      } finally {
-        setLoading(false); // Finaliza o carregamento
-      }
+  useEffect(() => {
+    const fetchFollowsAndFollowers = () => {
+      const nonFollowBack = follows.filter(follow =>
+        !followers.some(follower => follower.did === follow.did)
+      );
+      setNonFollowers(nonFollowBack);
+      setLoading(false);
     };
 
     fetchFollowsAndFollowers();
-  }, []);
+  }, [follows, followers]);
+
+  const handleUnfollow = async (did) => {
+    if (!agent) {
+      console.error('Agent not initialized.');
+      return;
+    }
+
+    try {
+      const { uri } = await agent.follow(did); // Buscando uri
+      await agent.deleteFollow(uri); // Chama a função de unfollow da API
+      console.log('Unfollow bem-sucedido:', did);
+
+      // Atualizar a lista de follows
+      setFollows(prev => prev.filter(follow => follow.did !== did));
+
+      // Atualizar a lista de nonFollowers
+      setNonFollowers(prev => prev.filter(friend => friend.did !== did));
+    } catch (error) {
+      console.error('Erro ao desfazer o follow:', error);
+      setError("Erro ao desfazer o follow.");
+    }
+  };
+
+  const handleUnfollowAll = async () => {
+    for (const friend of nonFollowers) {
+      await handleUnfollow(friend.did);      
+    }
+  };
 
   if (loading) {
     return (
@@ -105,6 +82,13 @@ const NonFollowers = () => {
     <div className="non-followers-container">
       <h2>N&atilde;o Rec&iacute;procos</h2>
       <p className="non-followers-count">Total: {nonFollowers.length}</p>
+      <button 
+        className="unfollow-all-button" 
+        onClick={handleUnfollowAll}
+        disabled={nonFollowers.length === 0} // Desabilita se não houver perfis
+      >
+        Unfollow Todos
+      </button>
       {nonFollowers.length > 0 ? (
         <ul className="non-followers-list">
           {nonFollowers.map(friend => (
@@ -114,6 +98,12 @@ const NonFollowers = () => {
                 <p className="friend-name">{friend.displayName}</p>
                 <p className="friend-handle">@{friend.handle}</p>
               </div>
+              <button 
+                className="unfollow-button" 
+                onClick={() => handleUnfollow(friend.did)}
+              >
+                Unfollow
+              </button>
             </li>
           ))}
         </ul>
