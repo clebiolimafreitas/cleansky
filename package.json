@@ -2,7 +2,6 @@
   "name": "cleansky",
   "version": "0.1.0",
   "private": false,
-  "homepage": "https://clebiolimafreitas.github.io/cleansky",
   "dependencies": {
     "@atproto/api": "^0.13.7",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
