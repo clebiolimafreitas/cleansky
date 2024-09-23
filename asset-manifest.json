@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/cleansky/static/css/main.5b5c24af.css",
+    "main.js": "/cleansky/static/js/main.3cb22121.js",
+    "static/js/453.963e4c6c.chunk.js": "/cleansky/static/js/453.963e4c6c.chunk.js",
+    "index.html": "/cleansky/index.html",
+    "main.5b5c24af.css.map": "/cleansky/static/css/main.5b5c24af.css.map",
+    "main.3cb22121.js.map": "/cleansky/static/js/main.3cb22121.js.map",
+    "453.963e4c6c.chunk.js.map": "/cleansky/static/js/453.963e4c6c.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5b5c24af.css",
+    "static/js/main.3cb22121.js"
+  ]
+}
