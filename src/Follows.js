@@ -96,7 +96,7 @@ const Follows = () => {
       {/* Campo de busca */}
       <input
         type="text"
-        placeholder="Filtrar por nome, handle ou descrição..."
+        placeholder="Filtrar por nome, handle ou descri&ccedil;&atilde;o..."
         value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
         className="search-input"
